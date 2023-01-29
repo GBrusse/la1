@@ -1,13 +1,35 @@
+; 'subj' is short for 'subject', 'srch' is short for 'search', and 'repl' is short for 'replacement'
+; 'recopy' is a recursive copy function. 'recdel' is a recursive delete function.
+
+(define (replace-random repl)
+  (let ((random-value (random repl)))
+    random-value))
+
 (define (tsar subj srch repl)
   (cond
     ((null? subj) '())
-    ((eq? subj srch) (replace-random repl))
+    ((equal? subj srch) (replace-random repl))
     ((pair? subj) (cons (tsar (car subj) srch repl)
                         (tsar (cdr subj) srch repl)))
     (else subj)))
 
-(define (replace-random repl)
+(define (equal? x y)
   (cond
-    ((null? repl) '())
-    ((eq? (car repl) 'RANDOM) (cons (random 100) (replace-random (cdr repl))))
-    (else (cons (car repl) (replace-random (cdr repl))))))
+    ((and (pair? x) (pair? y)) (and (equal? (car x) (car y)) (equal? (cdr x) (cdr y))))
+    ((or (pair? x) (pair? y)) #f)
+    (else (eq? x y))))
+
+(define (recopy subj)
+  (cond
+    ((null? subj) '())
+    ((pair? subj) (cons (recopy (car subj))
+                        (recopy (cdr subj))))
+    (else subj)))
+
+(define (recdel subj srch)
+  (cond
+    ((null? subj) '())
+    ((equal? subj srch) '())
+    ((pair? subj) (cons (recdel (car subj) srch)
+                        (recdel (cdr subj) srch)))
+    (else subj)))
