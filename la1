@@ -1,0 +1,13 @@
+(define (tsar subj srch repl)
+  (cond
+    ((null? subj) '())
+    ((eq? subj srch) (replace-random repl))
+    ((pair? subj) (cons (tsar (car subj) srch repl)
+                        (tsar (cdr subj) srch repl)))
+    (else subj)))
+
+(define (replace-random repl)
+  (cond
+    ((null? repl) '())
+    ((eq? (car repl) 'RANDOM) (cons (random 100) (replace-random (cdr repl))))
+    (else (cons (car repl) (replace-random (cdr repl))))))
