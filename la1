@@ -2,8 +2,10 @@
 ; 'recopy' is a recursive copy function. 'recdel' is a recursive delete function.
 
 (define (replace-random repl)
-  (let ((random-value (random repl)))
-    random-value))
+  (if (null? repl)
+      repl
+      (let ((random-value (random repl)))
+        random-value)))
 
 (define (tsar subj srch repl)
   (cond
