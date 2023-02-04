@@ -1,5 +1,6 @@
 ; 'subj' is short for 'subject', 'srch' is short for 'search', and 'repl' is short for 'replacement'
 ; 'recopy' is a recursive copy function. 'recdel' is a recursive delete function.
+; Need to replace 'equal?' with 'eq?'
 
 (define (replace-random repl)
   (if (null? repl)
