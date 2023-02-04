@@ -35,3 +35,29 @@
     ((pair? subj) (cons (recdel (car subj) srch)
                         (recdel (cdr subj) srch)))
     (else subj)))
+
+
+#|
+Almost there... Fails on (tsar ’(x (x) ((x)) z) ’() ’(y y))
+with the error message:
+In procedure raise-exception:
+In procedure car: Wrong type argument in position 1 (expecting pair): x
+
+?need to add another condition to check if the current subj is a list before accessing its car and cdr?
+
+(define (tsar subj srch repl)
+  (cond
+    ((null? subj) '())
+    ((eq? subj srch)
+     (let ((rand-val (random 100)))
+       (cond
+         ((not (list? repl)) repl)
+         ((not (equal? repl '(RANDOM))) repl)
+         (else rand-val))))
+    ((list? srch)
+     (if (equal? subj srch)
+         repl
+         (cons (tsar (car subj) srch repl) (tsar (cdr subj) srch repl))))
+    ((list? subj) (cons (tsar (car subj) srch repl) (tsar (cdr subj) srch repl)))
+    (else subj)))
+|#
