@@ -38,16 +38,15 @@
 
 
 #|
-Almost there... Fails on (tsar ’(x (x) ((x)) z) ’() ’(y y))
-with the error message:
-In procedure raise-exception:
-In procedure car: Wrong type argument in position 1 (expecting pair): x
-
-?need to add another condition to check if the current subj is a list before accessing its car and cdr?
+Almost there... Gives wrong outputs on more complicated inputs.
+Input: (tsar '(x (x) ((x)) z) '() '(y y))
+Expected output: (x (x y y) ((x y y) y y) z y y)
+Actual output: (x (x) ((x)) z)
 
 (define (tsar subj srch repl)
   (cond
     ((null? subj) '())
+    ((not (list? subj)) subj)
     ((eq? subj srch)
      (let ((rand-val (random 100)))
        (cond
