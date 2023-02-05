@@ -1,63 +1,19 @@
 ; 'subj' is short for 'subject', 'srch' is short for 'search', and 'repl' is short for 'replacement'
-; 'recopy' is a recursive copy function. 'recdel' is a recursive delete function.
-; Need to replace 'equal?' with 'eq?'
 
 (define (replace-random repl)
-  (if (null? repl)
-      repl
-      (let ((random-value (random repl)))
-        random-value)))
+  (if (pair? repl)
+      (cons (replace-random (car repl))
+            (replace-random (cdr repl)))
+      (if (eq? repl 'RANDOM)
+          (random 100)
+          repl)))
 
 (define (tsar subj srch repl)
-  (cond
-    ((null? subj) '())
-    ((equal? subj srch) (replace-random repl))
-    ((pair? subj) (cons (tsar (car subj) srch repl)
-                        (tsar (cdr subj) srch repl)))
-    (else subj)))
-
-(define (equal? x y)
-  (cond
-    ((and (pair? x) (pair? y)) (and (equal? (car x) (car y)) (equal? (cdr x) (cdr y))))
-    ((or (pair? x) (pair? y)) #f)
-    (else (eq? x y))))
-
-(define (recopy subj)
-  (cond
-    ((null? subj) '())
-    ((pair? subj) (cons (recopy (car subj))
-                        (recopy (cdr subj))))
-    (else subj)))
-
-(define (recdel subj srch)
-  (cond
-    ((null? subj) '())
-    ((equal? subj srch) '())
-    ((pair? subj) (cons (recdel (car subj) srch)
-                        (recdel (cdr subj) srch)))
-    (else subj)))
-
-
-#|
-Almost there... Gives wrong outputs on more complicated inputs.
-Input: (tsar '(x (x) ((x)) z) '() '(y y))
-Expected output: (x (x y y) ((x y y) y y) z y y)
-Actual output: (x (x) ((x)) z)
-
-(define (tsar subj srch repl)
-  (cond
-    ((null? subj) '())
-    ((not (list? subj)) subj)
-    ((eq? subj srch)
-     (let ((rand-val (random 100)))
-       (cond
-         ((not (list? repl)) repl)
-         ((not (equal? repl '(RANDOM))) repl)
-         (else rand-val))))
-    ((list? srch)
-     (if (equal? subj srch)
-         repl
-         (cons (tsar (car subj) srch repl) (tsar (cdr subj) srch repl))))
-    ((list? subj) (cons (tsar (car subj) srch repl) (tsar (cdr subj) srch repl)))
-    (else subj)))
-|#
+  (if (null? subj)
+      '()
+      (if (and (not (pair? subj)) (not (eq? subj srch)))
+          subj
+          (if (eq? subj srch)
+              (replace-random repl)
+              (cons (tsar (car subj) srch repl)
+                    (tsar (cdr subj) srch repl))))))
