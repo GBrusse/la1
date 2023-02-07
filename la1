@@ -18,3 +18,42 @@
               (replace-random repl)
               (cons (tsar (car subj) srch repl)
                     (tsar (cdr subj) srch repl))))))
+
+#|
+; same issue as above code, but this one does have the needed recursive functions
+
+(define (compare x y)
+  (cond
+    [(and (not (pair? x)) (not (pair? y))) (eq? x y)]
+    [(or (not (pair? x)) (not (pair? y))) #f]
+    [else (and (compare (car x) (car y)) (compare (cdr x) (cdr y)))]))
+
+(define (copy x)
+  (if (pair? x)
+      (cons (copy (car x)) (copy (cdr x)))
+      x))
+
+(define (delete x lst)
+  (cond
+    [(null? lst) '()]
+    [(compare x (car lst)) (delete x (cdr lst))]
+    [else (cons (car lst) (delete x (cdr lst)))]))
+
+(define (replace-random repl)
+  (if (pair? repl)
+      (cons (replace-random (car repl))
+            (replace-random (cdr repl)))
+      (if (eq? repl 'RANDOM)
+          (random 100)
+          repl)))
+
+(define (tsar subj srch repl)
+  (if (null? subj)
+      '()
+      (if (and (not (pair? subj)) (not (compare subj srch)))
+          subj
+          (if (compare subj srch)
+              (replace-random repl)
+              (cons (tsar (copy (car subj)) srch repl)
+                    (tsar (copy (cdr subj)) srch repl))))))
+|#
