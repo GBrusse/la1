@@ -1,27 +1,6 @@
 ; 'subj' is short for 'subject', 'srch' is short for 'search', and 'repl' is short for 'replacement'
 ;For some reason, will not work with: (tsar ’(x (x) ((x)) z) ’() ’(y y)). But all other inputs work.
 
-(define (replace-random repl)
-  (if (pair? repl)
-      (cons (replace-random (car repl))
-            (replace-random (cdr repl)))
-      (if (eq? repl 'RANDOM)
-          (random 100)
-          repl)))
-
-(define (tsar subj srch repl)
-  (if (null? subj)
-      '()
-      (if (and (not (pair? subj)) (not (eq? subj srch)))
-          subj
-          (if (eq? subj srch)
-              (replace-random repl)
-              (cons (tsar (car subj) srch repl)
-                    (tsar (cdr subj) srch repl))))))
-
-#|
-; same issue as above code, but this one does have the needed recursive functions
-
 (define (compare x y)
   (cond
     [(and (not (pair? x)) (not (pair? y))) (eq? x y)]
@@ -56,4 +35,3 @@
               (replace-random repl)
               (cons (tsar (copy (car subj)) srch repl)
                     (tsar (copy (cdr subj)) srch repl))))))
-|#
