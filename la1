@@ -1,5 +1,5 @@
 ; 'subj' is short for 'subject', 'srch' is short for 'search', and 'repl' is short for 'replacement'
-;For some reason, will not work with: (tsar ’(x (x) ((x)) z) ’() ’(y y)). But all other inputs work.
+; For some reason, will not work with: (tsar ’(x (x) ((x)) z) ’() ’(y y)). Using RANDOM twice, not making a copy.
 
 (define (compare x y)
   (cond

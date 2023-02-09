@@ -1,0 +1,26 @@
+Gary Brusse
+Spring 2023
+CS 354 -- LA1
+
+Tested this code on all of the example inputs in the homework .pdf and compared the corresponding outputs via guile.
+Every output matches accordingly except for two. (RANDOM RANDOM) inputs has the issue of 'RANDOM' is being called
+twice rather than being copied.
+Example -->
+Expected output:
+(x (76 76) ((63 63)) z)
+Actual output from this program:
+(x (56 29) ((37 81)) z)
+
+The only other output that does not match is:
+(tsar '(x (x) ((x)) z) '() '(y y))
+Expected output:
+(x (x y y) ((x y y) y y) z y y)
+Actual output:
+(x (x) ((x)) z)
+
+Suspected issues causing these bugs:
+
+The issue1 bug is that the function replace-random is always returning the same value for a given input repl. In this case, the random function is only called once for each call to replace-random, so it's not truly "random." To fix this, I can modify replace-random to call random each time it's invoked... In theory.
+
+The function compare doesn't handle the comparison of an empty list '() properly. Since the comparison is (eq? x y), it's comparing the address of x and y, which are both the same for '(), and thus the comparison returns true. The expected behavior would be for '() to be considered different from any other list, but that's not the case here.
+To fix the issue in Issue2, maybe I could modify the compare function to explicitly return #f if either x or y are the empty list '()?
